@@ -5,7 +5,7 @@ Measure
 	= Notes|4| _ "/"
     
 Notes 
-	= (Beats _ BeatAdjustment)*
+	= (Beats _ BeatMod)*
    
 Beats
 	= PlayedCenterBeats 
@@ -23,7 +23,7 @@ PlayedRimBeats
 Rest
 	= "tsu"
     
-BeatAdjustment
+BeatMod
     = "[" BeatScale "]"
     / ""
     
