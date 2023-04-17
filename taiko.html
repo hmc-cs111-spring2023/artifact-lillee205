@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang = "en">
 <head>
-    <script src = "https://cdn.jsdelivr.net/npm/peggy"></script>
+    <link rel="stylesheet" href="taiko.css">
+    <script src="https://unpkg.com/peggy"></script>
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/build/cjs/vexflow.js"></script>
-    <script src = "taikoParser.js"></script>
-    <script src = "taiko.js" defer></script>
+    <script src="https://unpkg.com/vexflow/releases/vexflow-debug.js"> </script> 
+    <script src="https://unpkg.com/vextab/releases/vextab-div.js"></script>
+    <link type="text/stylesheet" src="https://unpkg.com/vextab/releases/vextab.css">    
+    <script src="scripts/taikoGrammar.js"></script>
+    <script src = "scripts/taiko.js" defer></script>
 </head>
 
 <body>
     <div id="output"></div>
+    <input type="file" id="input" />
+    <div class="vexbox">
+        <div id="boo"></div>
+      </div>
 </body>
 </html>
