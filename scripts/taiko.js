@@ -1,3 +1,8 @@
+// Initialize text editor
+var quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+
 var data = ""
 
 // Create canvas for sheet music
@@ -14,7 +19,16 @@ console.log("generating grammar")
 const parser = peggy.generate(grammar)
 console.log(grammar)
 // Get text file and read it
-const inputElement = document.getElementById("input");
+const inputElement = document.getElementById("input")
+
+$("#identifier").on("submit",function(e) {
+    e.preventDefault()
+    console.log("h")
+    textObj = quill.getContents()
+    text = processText(textObj)
+    console.log(text)
+})
+
 
 // When file is selected, then parse file
 inputElement.addEventListener("change", function() {
@@ -28,12 +42,13 @@ inputElement.addEventListener("change", function() {
         console.log(taikoInput)
         try { // Try parsing
             const output = parser.parse(taikoInput.trim())
-            console.dir(output, {depth: null})
-            data = output[0] // setting up header
-            music = output[1]
-            music.forEach((measure) => {
-                data += measure.replaceAll(",", " ") + "\n"
+            console.dir(output, {depth: null}) // print taiko lang input
+            data = output[0] + "\n" // setting up header
+            music = output.splice(1) // notes
+            music.forEach( m => {
+                data += m + "\n"
             })
+            console.log("data is")
             console.log(data)
             // Create vextab
             tab.parse(data)
@@ -45,16 +60,14 @@ inputElement.addEventListener("change", function() {
     }
 }, false)
 
-
-
-
-// Music component 
-//renderer = new Vex.Flow.Renderer($('#music')[0], Vex.Flow.Renderer.Backends.SVG);
-// const vf = new Factory({
-//     renderer: { elementId: 'output', width: 500, height: 200 },
-// });
-// const score = vf.EasyScore();
-// const system = vf.System();
-
-// The grammar for parsing the user's input 
-// We can declare this variable at the bottom because of JS' hoisting property
+function processText(textObj) {
+    var text = ""
+    textObj.forEach( entry => {
+        if ("attributes" in entry && entry["attributes"]["bold"] == true ) {
+            text += "<bold>" + entry["insert"] + "</bold>"
+        } else {
+            text += entry["insert"]
+        }
+    })
+    return text
+}

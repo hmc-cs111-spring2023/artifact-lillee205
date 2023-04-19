@@ -1,34 +1,47 @@
 
 var grammar = `
 Score 
-	= measures:Measure|.., __| {return ["tabstave notation=true tablature=false clef = percussion \\n", measures]}
+	= measures:Measure|.., __| {
+    	var arr = ["tabstave notation=true tablature=false clef = percussion"]
+    	measures.forEach(meas => {arr.push(meas)})
+    	return arr
+        }
 Measure 
-	= notes:Notes _ "|" {return "notes " + notes + "|"}
-    / notes:Notes _ "=|=" {return "notes " + notes + "=|="}
-    
-Notes 
-   = Beats|.., _| 
-Beats
-	= PlayedCenterBeats 
-    / PlayedRimBeats
+    = notes:Note|.., _ | bar:Bar {
+    var arr = [] 
+    notes.forEach( b => {arr.push(b + " $.a./bottom.$")})
+   	return arr.join(" ") + " " + bar
+   }
+
+Note
+   = beat:Beat _ 
+   
+Beat
+	= PlayedCenterBeat
+    / PlayedRimBeat
     / Rest
  
-PlayedCenterBeats
+PlayedCenterBeat
 	= "don" {return ":q C/4"}
     / "do" {return ":8 C/4"}
     
-PlayedRimBeats 
-	= "ka" {return ":q G/4"}
-    / "kara"{return ":8 G/4"}
+PlayedRimBeat
+	= "ka" {return ":q C/5"}
+    / "kara"{return ":8 C/5"}
 
 Rest
 	= "tsu" {return "##"}
-	
+    
+Bar 
+	= "|"
+    / "=|="
+   
 _ "whitespace"
-    = [ \\n\\r]*
+    = [ \\t\\n\\r]*
 
 __ "mandatory whitespace"
-	= [ \\r\\n]+
+	= [ \\t\\r\\n]+
+
 `
 let f = 
 `
