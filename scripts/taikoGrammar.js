@@ -7,14 +7,19 @@ Score
     	return arr
         }
 Measure 
-    = notes:Note|.., _ | bar:Bar {
-    var arr = [] 
-    notes.forEach( b => {arr.push(b + " $.a./bottom.$")})
-   	return arr.join(" ") + " " + bar
-   }
+    = notes:Notes|.., _| _ bar:Bar {return "notes " + notes.join(" ") + " " + bar}
 
+Notes
+	= "<bold>" _ notes:Note|.., _| _ "</bold>" _ {
+    	var arr = []
+        notes.forEach(n => {
+        	arr.push(n.join("") + " $.a./bottom.$ ")
+        })
+        return arr.join("")
+    }
+    / note:Note _ {return note}
 Note
-   = beat:Beat _ 
+   = beat:Beat _ {return [beat]}
    
 Beat
 	= PlayedCenterBeat
@@ -41,7 +46,6 @@ _ "whitespace"
 
 __ "mandatory whitespace"
 	= [ \\t\\r\\n]+
-
 `
 let f = 
 `

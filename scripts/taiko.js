@@ -22,13 +22,15 @@ console.log(grammar)
 const inputElement = document.getElementById("input")
 
 $("#identifier").on("submit",function(e) {
+    tab.reset()
+    artist.reset()
     e.preventDefault()
-    console.log("h")
     textObj = quill.getContents()
     text = processText(textObj)
+    console.log("input is")
     console.log(text)
+    parseInput(text)
 })
-
 
 // When file is selected, then parse file
 inputElement.addEventListener("change", function() {
@@ -40,25 +42,30 @@ inputElement.addEventListener("change", function() {
         const taikoInput = fr.result
         console.log("The file we're looking at:")
         console.log(taikoInput)
-        try { // Try parsing
-            const output = parser.parse(taikoInput.trim())
-            console.dir(output, {depth: null}) // print taiko lang input
-            data = output[0] + "\n" // setting up header
-            music = output.splice(1) // notes
-            music.forEach( m => {
-                data += m + "\n"
-            })
-            console.log("data is")
-            console.log(data)
-            // Create vextab
-            tab.parse(data)
-            artist.render(renderer)
-
-        } catch(e) { // If parsing fails, print error
-            console.log(e)
-        }
+        parseInput(taikoInput)
+        
     }
 }, false)
+
+function parseInput(input) {
+    try { // Try parsing
+        const output = parser.parse(input.trim())
+        console.dir(output, {depth: null}) // print taiko lang input
+        data = output[0] + "\n" // setting up header
+        music = output.splice(1) // notes
+        music.forEach( m => {
+            data += m + "\n"
+        })
+        console.log("Vex tab translation")
+        console.log(data)
+        // Create vextab
+        tab.parse(data)
+        artist.render(renderer)
+
+    } catch(e) { // If parsing fails, print error
+        console.log(e)
+    }
+}
 
 function processText(textObj) {
     var text = ""
