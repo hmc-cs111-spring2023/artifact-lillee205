@@ -16,7 +16,7 @@ Measure
 
 PatternDef 
 	= "\`" _ "{" _ name:PatternName _ "}" __ measure:Measure|.., __| _ "\`" {
-		hashmap.set(name, measure) 
+		hashmap.set(name, measure.join(" \\n ")) 
         return ""
 	}
 PatternCall
