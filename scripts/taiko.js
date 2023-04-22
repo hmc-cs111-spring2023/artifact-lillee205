@@ -16,6 +16,7 @@ const tab = new VexTab(artist)
 
 // Generate parser
 console.log("generating grammar")
+var hashmap = new Map()
 const parser = peggy.generate(grammar)
 console.log(grammar)
 // Get text file and read it

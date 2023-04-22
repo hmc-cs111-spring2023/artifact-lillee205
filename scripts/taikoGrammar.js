@@ -1,13 +1,29 @@
-
 var grammar = `
 Score 
-	= measures:Measure|.., __| {
+	= blocks:MeasureBlocks|.., __| {
     	var arr = ["tabstave notation=true tablature=false clef = percussion"]
-    	measures.forEach(meas => {arr.push(meas)})
+    	blocks.forEach(b => {arr.push(b)})
     	return arr
         }
+        
+MeasureBlocks
+	= Measure
+    / PatternDef
+    / PatternCall
+ 
 Measure 
     = notes:Notes|.., _| _ bar:Bar {return "notes " + notes.join(" ") + " " + bar}
+
+PatternDef 
+	= "\`" _ "{" _ name:PatternName _ "}" __ measure:Measure|.., __| _ "\`" {
+		hashmap.set(name, measure) 
+        return ""
+	}
+PatternCall
+    = "{" _ name:PatternName _ "}" {return hashmap.get(name)}
+
+PatternName 
+    = "\\"" _ name:[a-z, _, A-Z]* _ "\\"" {return name.join("")}
 
 Notes
 	= "<bold>" _ notes:Note|.., _| _ "</bold>" _ {
@@ -18,8 +34,12 @@ Notes
         return arr.join("")
     }
     / note:Note _ {return note}
+
 Note
-   = beat:Beat _ {return [beat]}
+   = beat:Beat _ beatMod:BeatMod? {
+   		var note = ":" + (beat[0] * (beatMod == "" ? 1 : beatMod)) + " " + beat[1]
+		return [note]
+   }
    
 Beat
 	= PlayedCenterBeat
@@ -27,36 +47,32 @@ Beat
     / Rest
  
 PlayedCenterBeat
-	= "don" {return ":q C/4"}
-    / "do" {return ":8 C/4"}
+	= "don" {return [4, "C/4"]}
+    / "do" {return [8, "C/4"]}
     
 PlayedRimBeat
-	= "ka" {return ":q C/5"}
-    / "kara"{return ":8 C/5"}
+	= "ka" {return [4, "C/5"]}
+    / "kara"{return [8, "C/5"]}
 
 Rest
-	= "tsu" {return "##"}
+	= "tsu" {return [4, "##"]}
     
+BeatMod
+    = "[" _ b:BeatScale _ "]" {return b}
+    / ""
+    
+BeatScale 
+	= "1" {return 1}
+    / "2" {return 2}
+    / "4" {return 4}
 Bar 
 	= "|"
     / "=|="
-   
+
 _ "whitespace"
     = [ \\t\\n\\r]*
 
 __ "mandatory whitespace"
 	= [ \\t\\r\\n]+
-`
-let f = 
-`
-BeatMod
-    = "[" BeatScale "]"
-    / ""
-    
-BeatScale 
-	= "1"
-    / "2" 
-    / "4"
-    / "1/2"
-    / "1/4"
+
 `
