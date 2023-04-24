@@ -1,9 +1,11 @@
 // Initialize text editor
 var quill = new Quill('#editor', {
-    theme: 'snow'
+    theme: 'snow',
+    modules: {
+         toolbar: ["bold"] 
+    }
   });
 
-var data = ""
 
 // Create canvas for sheet music
 const VF = Vex.Flow 
@@ -23,8 +25,6 @@ console.log(grammar)
 const inputElement = document.getElementById("input")
 
 $("#identifier").on("submit",function(e) {
-    tab.reset()
-    artist.reset()
     e.preventDefault()
     textObj = quill.getContents()
     text = processText(textObj)
@@ -49,14 +49,21 @@ inputElement.addEventListener("change", function() {
 }, false)
 
 function parseInput(input) {
+    tab.reset()
+    artist.reset()
+    var data = "" 
+    document.getElementById("errorMsg").innerText = ""
     try { // Try parsing
         const output = parser.parse(input.trim())
         console.dir(output, {depth: null}) // print taiko lang input
-        data = output[0] + "\n" // setting up header
+        header = output[0] + "\n"
         music = output.splice(1) // notes
-        music.forEach( m => {
-            data += m + "\n"
-        })
+        for (var i = 0; i < music.length; i++){
+            if (i % 4 == 0) {
+                data += header 
+            }
+            data += music[i] + "\n"
+        }
         console.log("Vex tab translation")
         console.log(data)
         // Create vextab
@@ -65,6 +72,7 @@ function parseInput(input) {
 
     } catch(e) { // If parsing fails, print error
         console.log(e)
+        document.getElementById("errorMsg").innerText = e
     }
 }
 

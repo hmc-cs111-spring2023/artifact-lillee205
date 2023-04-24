@@ -16,14 +16,43 @@
 </head>
 
 <body>
-    <form method="post" id="identifier">
-        <div id="editor"></div>
-        <input type="submit" value="Run input" />
-    </form>
-    <div id="output"></div>
-    <input type="file" id="input" />
-    <div class="vexbox">
-        <div id="boo"></div>
-      </div>
+    <div class = "gridContainer">
+        <div class = "gridItem" id = "inputText">
+            <form method="post" id="identifier" style="height:80%;">
+                <div id = "editorContainer">
+                    <div id="editor"></div>
+                    <input type="submit" value="Run input" style = "display:inline;"/>
+                    <input type="file" id="input" style = "display:inline;" />
+
+                </div>
+            </form>
+            <div id = "errorMsg"></div>
+        </div>
+        <div class = "gridItem" id = "outputMusic">
+            <div class="vexbox">
+                <div id="boo"></div>
+            </div>
+        </div>
+        <div class = "gridItem" id = "documentation">
+            <h3>Documentation</h3>
+            <h4>Notes</h4>
+            <ul>
+            <li>don: quarter note (center)</li>
+            <li>do: eighth note (center)</li>
+            <li>ka: quarter note (rim)</li>
+            <li>tsu: quarter rest</li>
+            </ul>
+            <h4>Beat modification</h4>
+            note[beatMod] <br>
+            ex) don[2] = 1/4 note * 1/2 = 1/8 note
+            <h4>Patterns</h4>
+            <p>to create a pattern:</p> 
+            `{"patternName"}<br>
+            // insert pattern here<br>
+            `
+            <p>to call a pattern:</p>
+            {"patternName"}
+        </div>
+    </div>
 </body>
 </html>
